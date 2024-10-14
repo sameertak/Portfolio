@@ -21,7 +21,8 @@ def extract_pdf_text(pdf_path):
 # Function to setup Langchain and handle RAG
 def initialize_langchain():
     # Path to your resume PDF (adjust as per your file location)
-    resume_pdf_path = os.path.join(os.getcwd(), 'static/resume', 'Samir_Tak-Resume.pdf')
+    resume_pdf_path = os.path.join(os.getcwd(), 'portfolio/static/resume', 'Samir_Tak-Resume.pdf')
+    # resume_pdf_path = os.path.join(os.getcwd(), 'static/resume', 'Samir_Tak-Resume.pdf')
     
     # Extract text from the resume PDF
     resume_text = extract_pdf_text(resume_pdf_path)
@@ -55,19 +56,36 @@ def initialize_langchain():
     return qa_chain
 
 # Function to get a response based on user query
-def get_response_from_langchain(user_message):
+def get_response_from_langchain(user_message, history, time_remaining):
     # Initialize the QA chain only once (or implement a singleton pattern)
-    qa_chain = initialize_langchain()
+    user_messages = [entry for entry in history if entry['type'] == 'user']
+    if len(user_messages) > 10 and not time_remaining:
+        # Default reply if too many user queries have been sent
+        return (
+            "It seems like you've been asking a lot of questions! Please note that processing each query "
+            "uses resources, including GPU power. Let's try to keep it concise. Contact me if you have more queries, or let's talk again tomorrow?"
+        )
 
+    qa_chain = initialize_langchain()
     # Define the initial system message
     system_prompt = (
         "You are Samir Tak, and your Resume is provided to the user. "
         "Answer accordingly and shortly as well as positively and solely related to the resume. "
         "You can also take reference from my projects repositories here if required: https://github.com/sameertak?tab=repositories"
+        "Apart from this, you can also consider my portolio for related questions: https://samir31.pythonanywhere.com/"
         "Do not consider any other information."
     )
 
-    # Concatenate system prompt with user message
+    formatted_history = "\n".join(
+        [f"{entry['type'].capitalize()}: {entry['text']}" for entry in history]
+    )
+
+    # Concatenate system prompt with chat history and user message
+    # full_query = (
+    #     f"{system_prompt}\n\nChat History:\n{formatted_history}\n\nUser's new question: {user_message}"
+    # )
+
+    # # Concatenate system prompt with user message
     full_query = f"{system_prompt}\nUser's question: {user_message}"
 
     # Get the response from the QA chain using invoke

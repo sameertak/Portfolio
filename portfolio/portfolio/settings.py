@@ -30,7 +30,7 @@ SECRET_KEY = env('DJANGO_SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.29.57', 'localhost']
+ALLOWED_HOSTS = ['samir31.pythonanywhere.com', 'localhost']
 
 
 # Application definition

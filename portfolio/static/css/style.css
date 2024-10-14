@@ -9724,6 +9724,20 @@ textarea.form-control {
   background-color: #656a6c;
 }
 
+#notification-counter{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bolder;
+  width: 20px; /* adjust to desired size */
+  height: 20px; /* adjust to desired size */
+  border-radius: 50%; /* make it a circle */
+  background-color: red; /* optional: add a background color */
+  position: fixed;
+  bottom: 55px;
+  right: 20px;
+}
+
 .sign {
   width: 100%;
   transition-duration: 0.3s;
@@ -9749,44 +9763,62 @@ textarea.form-control {
   font-weight: 600;
   transition-duration: 0.3s;
 }
-/* 
-.Btn:hover {
+
+.Btn {
   width: 150px;
   border-radius: 40px;
   transition-duration: 0.3s;
 }
 
-.Btn:hover .sign {
+.Btn .sign {
   width: 30%;
   transition-duration: 0.3s;
   padding-left: 10px;
 }
 
-.Btn:hover .text {
+.Btn .text {
   opacity: 1;
   width: 70%;
   transition-duration: 0.3s;
   padding-right: 10px;
-} */
+}
+
 .Btn:active {
   transform: translate(2px, 2px);
 }
     
+.Btn:focus {
+  outline: none;
+}
 
+.Btn:focus-visible {
+  outline: none;
+}
 
 .chat-container {
   position: fixed;
-  bottom: 60px;
-  right: 60px;
-  height: 400px;
+  bottom: 65px;
+  right: 33px;
+  height: 500px;
   background-color: #fff;
   border-radius: 10px;
   padding: 10px;
   display: flex;
   flex-direction: column;
-  width: 300px;
+  width: 400px;
   border-bottom-right-radius: 0;
   display: none;
+}
+
+@media (max-width: 575.98px) {
+  .chat-container {
+    right: 0;
+    left: 0; 
+    bottom: 0;
+    margin: 0 auto;
+    width: 93%;
+    border-bottom-right-radius: 10px;
+  }
 }
 
 .chat-header {
@@ -9795,6 +9827,29 @@ textarea.form-control {
   border-bottom: 1px solid #ccc;
   /* padding: 0; */
   padding: 5px;
+  justify-content: space-between;
+}
+
+.chat-header-content {
+  display: flex;
+  align-items: center;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px; /* Adjust padding as needed */
+}
+
+.close-button svg {
+  width: 24px; /* Size of the close icon */
+  height: 24px;
+  color: black; /* Change color as needed */
+}
+
+.close-button:hover svg {
+  color: red; /* Change color on hover for better visibility */
 }
 
 .chat-header .img-avatar {
@@ -9831,20 +9886,24 @@ textarea.form-control {
 }
 
 .message-box.left {
+  position: relative;
   background-color: #f1f1f1;
   color: black;
   font-size: 13px;
-  left: 0;
+  width: 75%;
 }
 
 .message-box.right {
+  position: relative;
   background-color: #333;
   color: #fff;
   font-size: 13px;
-  right: 0;
+  width: 75%;
+  left: 25%;
 }
 
 .message-input {
+  position: relative;
   padding: 5px;
   border-top: 1px solid #ccc;
   background-color: #fff;

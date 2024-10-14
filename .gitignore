@@ -3,3 +3,5 @@ env
 *.sqlite3
 __pycache__
 __init__.py
+test.py
+*.mp3

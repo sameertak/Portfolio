@@ -20,10 +20,10 @@ def chat_response(request):
     if request.method == 'POST':
         data = json.loads(request.body)
         user_message = data.get('message')
-
+        history = data.get('history')
+        time_remaining = data.get('time_remaining')
         # Use the Langchain helper to get a response from the resume PDF
-        response = get_response_from_langchain(user_message)
-
+        response = get_response_from_langchain(user_message, history, time_remaining)
         return JsonResponse({'response': response})
     return JsonResponse({'error': 'Invalid request method'}, status=400)
 
@@ -51,8 +51,6 @@ def contact_view(request):
         subject = request.POST.get('subject')
         message = request.POST.get('message')
         
-        print('Sending 1st Mail')
-
         # Send email to yourself
         send_mail(
             subject,
