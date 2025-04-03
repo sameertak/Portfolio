@@ -173,6 +173,13 @@
 	};
 	scrollWindow();
 
+	function calculateExperience(startDate) {
+		const currentDate = new Date();
+		const start = new Date(startDate);
+		const totalMonths = (currentDate.getFullYear() - start.getFullYear()) * 12 + (currentDate.getMonth() - start.getMonth());
+		return totalMonths;
+	}
+
 	var counter = function() {
 		const experienceMonths = calculateExperience('2023-06-05'); // Update this date as needed
 		$('#experience').attr('data-number', experienceMonths);

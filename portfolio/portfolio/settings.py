@@ -36,6 +36,7 @@ ALLOWED_HOSTS = ['samir31.pythonanywhere.com', 'localhost']
 # Application definition
 
 INSTALLED_APPS = [
+    'article',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

@@ -40,13 +40,14 @@
 
 			<div class="collapse navbar-collapse" id="ftco-nav">
 				<ul class="navbar-nav nav ml-auto">
-					<li class="nav-item"><a href="#home-section" class="nav-link"><span>Home</span></a></li>
-					<li class="nav-item"><a href="#about-section" class="nav-link"><span>About</span></a></li>
-					<li class="nav-item"><a href="#resume-section" class="nav-link"><span>Education & Experience</span></a></li>
-					<li class="nav-item"><a href="#services-section" class="nav-link"><span>Expertise</span></a></li>
-					<li class="nav-item"><a href="#skills-section" class="nav-link"><span>Skills</span></a></li>
-					<li class="nav-item"><a href="#projects-section" class="nav-link"><span>Projects</span></a></li>
-					<li class="nav-item"><a href="#contact-section" class="nav-link"><span>Contact</span></a></li>
+					<li class="nav-item"><a href="/#home-section" class="nav-link"><span>Home</span></a></li>
+					<li class="nav-item"><a href="/#about-section" class="nav-link"><span>About</span></a></li>
+					<li class="nav-item"><a href="/#resume-section" class="nav-link"><span>Resume</span></a></li>
+					<li class="nav-item"><a href="/#services-section" class="nav-link"><span>Services</span></a></li>
+					<li class="nav-item"><a href="/#skills-section" class="nav-link"><span>Skills</span></a></li>
+					<li class="nav-item"><a href="/#projects-section" class="nav-link"><span>Projects</span></a></li>
+					<li class="nav-item"><a href="/articles/" class="nav-link"><span>My Blog</span></a></li>
+					<li class="nav-item"><a href="/#contact-section" class="nav-link"><span>Contact</span></a></li>
 				</ul>
 			</div>
 		</div>
@@ -689,318 +690,322 @@
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 	<script>
-		let chatOpen = false;
-		let unreadMessages = 1;
-		const originalTitle = document.title;  // Save the original tab title
-		let blinkInterval;  // Variable to store the interval ID for blinking
+	let chatOpen = false;
+	let unreadMessages = 1;
+	const originalTitle = document.title;  // Save the original tab title
+	let blinkInterval;  // Variable to store the interval ID for blinking
 
-		function startBlinkingTabTitle() {
-			let showUnread = true;  // Flag to toggle between titles
-			blinkInterval = setInterval(function () {
-				if (unreadMessages > 0) {
-					document.title = showUnread ? `(${unreadMessages}) New messages - ${originalTitle}` : originalTitle;
-					showUnread = !showUnread;  // Toggle between showing unread message count and original title
-				} else {
-					clearInterval(blinkInterval);  // Stop blinking when there are no unread messages
-					document.title = originalTitle;  // Reset to original title
-				}
-			}, 1000);  // Blink every 1 second (1000ms)
-		}
-
-		function stopBlinkingTabTitle() {
-			clearInterval(blinkInterval);  // Stop the blinking effect
-			document.title = originalTitle;  // Reset to original title
-		}
-
-		function calculateExperience(startDate) {
-			const currentDate = new Date();
-			const start = new Date(startDate);
-			const totalMonths = (currentDate.getFullYear() - start.getFullYear()) * 12 + (currentDate.getMonth() - start.getMonth());
-			return totalMonths;
-		}
-
-		function toggleChat() {
-			const chatCard = document.getElementById("chatCard");
-			const notificationCounter = document.getElementById('notification-counter');
-
-			// Toggle visibility of the chat card
-			if (chatCard.style.display === "none" || chatCard.style.display === "") {
-				chatCard.style.display = "flex"; // Show the chat card
-				notificationCounter.textContent = '0'; // Reset counter when chat opens
-				unreadMessages = 0
-				notificationCounter.style.display = "none"
-				stopBlinkingTabTitle();
+	function startBlinkingTabTitle() {
+		let showUnread = true;  // Flag to toggle between titles
+		blinkInterval = setInterval(function () {
+			if (unreadMessages > 0) {
+				document.title = showUnread ? `(${unreadMessages}) New messages - ${originalTitle}` : originalTitle;
+				showUnread = !showUnread;  // Toggle between showing unread message count and original title
 			} else {
-				chatCard.style.display = "none"; // Hide the chat card
-				if (unreadMessages > 0) {
-					notificationCounter.textContent = unreadMessages; // Show counter if there are unread messages
-					notificationCounter.style.display = "inline-block"
-				}
+				clearInterval(blinkInterval);  // Stop blinking when there are no unread messages
+				document.title = originalTitle;  // Reset to original title
 			}
+		}, 1000);  // Blink every 1 second (1000ms)
+	}
 
-			chatOpen = !chatOpen;
+	function stopBlinkingTabTitle() {
+		clearInterval(blinkInterval);  // Stop the blinking effect
+		document.title = originalTitle;  // Reset to original title
+	}
 
+	function calculateExperience(startDate) {
+		const currentDate = new Date();
+		const start = new Date(startDate);
+		const totalMonths = (currentDate.getFullYear() - start.getFullYear()) * 12 + (currentDate.getMonth() - start.getMonth());
+		return totalMonths;
+	}
+
+	function toggleChat() {
+		const chatCard = document.getElementById("chatCard");
+		const notificationCounter = document.getElementById('notification-counter');
+
+		// Toggle visibility of the chat card
+		if (chatCard.style.display === "none" || chatCard.style.display === "") {
+			chatCard.style.display = "flex"; // Show the chat card
+			notificationCounter.textContent = '0'; // Reset counter when chat opens
+			unreadMessages = 0
+			notificationCounter.style.display = "none"
+			stopBlinkingTabTitle();
+		} else {
+			chatCard.style.display = "none"; // Hide the chat card
+			if (unreadMessages > 0) {
+				notificationCounter.textContent = unreadMessages; // Show counter if there are unread messages
+				notificationCounter.style.display = "inline-block"
+			}
 		}
 
-		// Function to close the chat window
-		function closeChat() {
-			const chatContainer = document.getElementById('chatCard');
-			chatContainer.style.display = 'none';
+		chatOpen = !chatOpen;
+
+	}
+
+	// Function to close the chat window
+	function closeChat() {
+		const chatContainer = document.getElementById('chatCard');
+		chatContainer.style.display = 'none';
+	}
+
+	// Event listener for clicks outside the chat
+	document.addEventListener('click', function (event) {
+		const chatContainer = document.getElementById('chatCard');
+		const chatButton = document.querySelector('.Btn'); // Assuming this is your button class
+		const isClickInsideChat = chatContainer.contains(event.target);
+		const isClickInsideButton = chatButton.contains(event.target);
+
+		// If the click was outside both the chat and the button, close the chat
+		if (!isClickInsideChat && !isClickInsideButton) {
+			closeChat();
 		}
+	});
 
-		// Event listener for clicks outside the chat
-		document.addEventListener('click', function (event) {
-			const chatContainer = document.getElementById('chatCard');
-			const chatButton = document.querySelector('.Btn'); // Assuming this is your button class
-			const isClickInsideChat = chatContainer.contains(event.target);
-			const isClickInsideButton = chatButton.contains(event.target);
+	$('#contactForm').on('submit', function (event) {
+		event.preventDefault(); // Prevent the default form submission
+		var url = $(this).data('url'); // Get the URL from the data attribute
+		var submitButton = $(this).find('input[type="submit"]');
+		submitButton.prop('disabled', true); // Disable the button
+		submitButton.value = "Sending" // Disable the button
 
-			// If the click was outside both the chat and the button, close the chat
-			if (!isClickInsideChat && !isClickInsideButton) {
-				closeChat();
+		$.ajax({
+			type: 'POST',
+			url: url, // Use the URL from the data attribute
+			data: $(this).serialize(), // Serialize the form data
+			success: function (response) {
+
+				// Show toast notification
+				$('#contactForm').trigger('reset');
+				var toast = $('#toast');
+				toast.addClass('show'); // Add the show class to make it visible
+				submitButton.prop('disabled', false); // Enable the button
+				submitButton.value = "Send Message"
+				setTimeout(function () {
+					toast.removeClass('show'); // Remove the show class after 3 seconds
+				}, 3000);
+			},
+			error: function (xhr, status, error) {
+				// Handle errors if needed
+				alert('An error occurred: ' + error);
+				submitButton.prop('disabled', false); // Enable the button
+			}
+		});
+	});
+
+	// Function to get chat history from Local Storage
+	function getChatHistory() {
+		return JSON.parse(localStorage.getItem('chatHistory')) || [];
+	}
+
+	function currentPage() {
+		return window.location.pathname
+	}
+
+	// Function to save chat history to Local Storage
+	function saveChatHistory(messages) {
+		localStorage.setItem('chatHistory', JSON.stringify(messages));
+	}
+
+	// Function to delete chat history from Local Storage
+	function deleteChatHistory() {
+		localStorage.removeItem('chatHistory');
+	}
+
+	function saveLastMessageTimestamp() {
+		const currentTime = new Date().getTime();
+		localStorage.setItem('lastMessageTimestamp', currentTime);
+	}
+
+	// Function to get the message count from Local Storage
+	function getMessageCount() {
+		const chatHistory = getChatHistory(); // Retrieve chat history from local storage
+		let userMessageCount = 0; // Initialize a counter for user messages
+
+		// Loop through the chat history and count user messages
+		chatHistory.forEach(message => {
+			if (message.type === 'user') {
+				userMessageCount++;
 			}
 		});
 
-		$('#contactForm').on('submit', function (event) {
-			event.preventDefault(); // Prevent the default form submission
-			var url = $(this).data('url'); // Get the URL from the data attribute
-			var submitButton = $(this).find('input[type="submit"]');
-			submitButton.prop('disabled', true); // Disable the button
-			submitButton.value = "Sending" // Disable the button
+		return userMessageCount; // Return the count of user messages
+	}
 
+	// Function to save the message count to Local Storage
+	function saveMessageCount(count) {
+		localStorage.setItem('messageCount', count);
+	}
+
+	// Function to reset message count from Local Storage
+	function resetMessageCount() {
+		localStorage.removeItem('messageCount');
+	}
+
+	// Function to save the last message timestamp
+	function saveLastMessageTimestamp() {
+		localStorage.setItem('lastMessageTimestamp', new Date().getTime());
+	}
+
+	// Function to get the last message timestamp
+	function getLastMessageTimestamp() {
+		return parseInt(localStorage.getItem('lastMessageTimestamp')) || 0;
+	}
+
+	// Function to check if 24 hours have passed since the last message was sent
+	function has24HoursPassed() {
+		const lastTimestamp = getLastMessageTimestamp();
+		const currentTime = new Date().getTime();
+		const hours24 = 24 * 60 * 60 * 1000;
+		return (currentTime - lastTimestamp) >= hours24;
+	}
+
+	function displayChatMessages() {
+		const messages = getChatHistory();
+		const messagesContainer = $('.messages-container');
+		messagesContainer.empty(); // Clear existing messages
+
+		messages.forEach(({ type, text }) => {
+			const messageBox = $('<div class="message-box ' + (type === 'user' ? 'right' : 'left') + '"><p></p></div>');
+			messageBox.find('p').text(text);
+			messagesContainer.append(messageBox);
+		});
+		messagesContainer.scrollTop(messagesContainer[0].scrollHeight);
+	}
+
+	// Display chat messages on page load
+	$(document).ready(function () {
+		displayChatMessages();
+		if (has24HoursPassed()) {
+			deleteChatHistory()
+			resetMessageCount()
+		}
+	});
+
+
+	// Form submission handling
+	$('#chatCard form').on('submit', function (event) {
+		event.preventDefault();
+		let userMessage = $('.message-send').val().trim();
+
+		if (userMessage) {
+			// Append user message to chat
+			$('.messages-container').append('<div class="message-box right"><p>' + userMessage + '</p></div>');
+
+			// Save the user message to Local Storage
+			const chatHistory = getChatHistory();
+			chatHistory.push({ type: 'user', text: userMessage });
+			saveChatHistory(chatHistory);
+
+			// Increase the message count and save it
+			let messageCount = getMessageCount() + 1;
+			saveMessageCount(messageCount);
+
+			// Check if the user has sent 11 messages
+			if (messageCount === 11) {
+				saveLastMessageTimestamp(); // Save the timestamp when the 11th message is sent
+			}
+
+			const notification_counter = document.getElementById('notification-counter');
+
+			// Start the GIF
+			let avatar = $('#avatar');
+			if (!chatOpen) {
+				unreadMessages += 1;
+				var sound = document.getElementById('notificationSound');
+				sound.currentTime = 0; // Rewind to the start
+				sound.play(); // Play the sound
+				$('#notification-counter').text(unreadMessages); // Increment unread message count
+				notification_counter.style.display = "inline-block";
+				startBlinkingTabTitle();
+			}
+
+			avatar.attr('src', 'static/images/saitama.gif'); // This restarts the GIF
+
+			// Disable input and button while waiting for the response
+			$('.message-send').val('');
+			$('.svg-button').prop('disabled', true);
+			$('.messages-container').scrollTop($('.messages-container')[0].scrollHeight);
+			$('.svg-button').html(`
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-stop">
+					<rect x="6" y="6" width="12" height="12"></rect>
+				</svg>
+			`);
+			let typingIndicator = $('<div class="typing-indicator"><div class="typing-circle"></div><div class="typing-circle"></div><div class="typing-circle"></div><div class="typing-shadow"></div><div class="typing-shadow"></div><div class="typing-shadow"></div></div>');
+			$('.messages-container').append(typingIndicator);
+			$('.messages-container').scrollTop($('.messages-container')[0].scrollHeight);
+			console.log(currentPage())
 			$.ajax({
 				type: 'POST',
-				url: url, // Use the URL from the data attribute
-				data: $(this).serialize(), // Serialize the form data
+				url: '/chat-response/',
+				data: JSON.stringify({ message: userMessage, history: getChatHistory(), time_remaining: has24HoursPassed(), currentPage: currentPage() }),
+				contentType: 'application/json',
 				success: function (response) {
+					// Append the bot's response to chat
+					typingIndicator.remove();
 
-					// Show toast notification
-					$('#contactForm').trigger('reset');
-					var toast = $('#toast');
-					toast.addClass('show'); // Add the show class to make it visible
-					submitButton.prop('disabled', false); // Enable the button
-					submitButton.value = "Send Message"
-					setTimeout(function () {
-						toast.removeClass('show'); // Remove the show class after 3 seconds
-					}, 3000);
+					let botMessage = response.response;  // Get the bot's full response
+					let words = botMessage.split(' ');   // Split the response into words
+					let messageBox = $('<div class="message-box left"><p></p></div>');  // Create message container
+					$('.messages-container').append(messageBox);
+
+					// Show message one word at a time based on word length
+					let i = 0;
+
+					function typeWord() {
+						if (i < words.length) {
+							messageBox.find('p').append(words[i] + ' ');
+							$('.messages-container').scrollTop($('.messages-container')[0].scrollHeight);
+
+							// Calculate delay based on word length
+							let delay = Math.max(200, words[i].length * 10); // Minimum 200ms, adjust delay based on word length
+							i++;
+
+							// Continue typing with dynamic delay
+							setTimeout(typeWord, delay);
+						} else {
+							// Save bot's response to Local Storage
+							const chatHistory = getChatHistory();
+							chatHistory.push({ type: 'bot', text: botMessage });
+							saveChatHistory(chatHistory);
+							$('.svg-button').prop('disabled', false);
+							$('.svg-button').html(`
+								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+									stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+									class="feather feather-send">
+										<line x1="22" y1="2" x2="11" y2="13"></line>
+										<polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+								</svg>`
+							)
+						}
+					}
+
+					// Start typing the first word
+					typeWord();
+
 				},
 				error: function (xhr, status, error) {
-					// Handle errors if needed
 					alert('An error occurred: ' + error);
-					submitButton.prop('disabled', false); // Enable the button
-				}
-			});
-		});
-
-		// Function to get chat history from Local Storage
-		function getChatHistory() {
-			return JSON.parse(localStorage.getItem('chatHistory')) || [];
-		}
-
-		// Function to save chat history to Local Storage
-		function saveChatHistory(messages) {
-			localStorage.setItem('chatHistory', JSON.stringify(messages));
-		}
-
-		// Function to delete chat history from Local Storage
-		function deleteChatHistory() {
-			localStorage.removeItem('chatHistory');
-		}
-
-		function saveLastMessageTimestamp() {
-			const currentTime = new Date().getTime();
-			localStorage.setItem('lastMessageTimestamp', currentTime);
-		}
-
-		// Function to get the message count from Local Storage
-		function getMessageCount() {
-			const chatHistory = getChatHistory(); // Retrieve chat history from local storage
-			let userMessageCount = 0; // Initialize a counter for user messages
-
-			// Loop through the chat history and count user messages
-			chatHistory.forEach(message => {
-				if (message.type === 'user') {
-					userMessageCount++;
-				}
-			});
-
-			return userMessageCount; // Return the count of user messages
-		}
-
-		// Function to save the message count to Local Storage
-		function saveMessageCount(count) {
-			localStorage.setItem('messageCount', count);
-		}
-
-		// Function to reset message count from Local Storage
-		function resetMessageCount() {
-			localStorage.removeItem('messageCount');
-		}
-
-		// Function to save the last message timestamp
-		function saveLastMessageTimestamp() {
-			localStorage.setItem('lastMessageTimestamp', new Date().getTime());
-		}
-
-		// Function to get the last message timestamp
-		function getLastMessageTimestamp() {
-			return parseInt(localStorage.getItem('lastMessageTimestamp')) || 0;
-		}
-
-		// Function to check if 24 hours have passed since the last message was sent
-		function has24HoursPassed() {
-			const lastTimestamp = getLastMessageTimestamp();
-			const currentTime = new Date().getTime();
-			const hours24 = 24 * 60 * 60 * 1000;
-			return (currentTime - lastTimestamp) >= hours24;
-		}
-
-		function displayChatMessages() {
-			const messages = getChatHistory();
-			const messagesContainer = $('.messages-container');
-			messagesContainer.empty(); // Clear existing messages
-
-			messages.forEach(({ type, text }) => {
-				const messageBox = $('<div class="message-box ' + (type === 'user' ? 'right' : 'left') + '"><p></p></div>');
-				messageBox.find('p').text(text);
-				messagesContainer.append(messageBox);
-			});
-			messagesContainer.scrollTop(messagesContainer[0].scrollHeight);
-		}
-
-		// Display chat messages on page load
-		$(document).ready(function () {
-			displayChatMessages();
-			if (has24HoursPassed()) {
-				deleteChatHistory()
-				resetMessageCount()
-			}
-		});
-
-
-		// Form submission handling
-		$('#chatCard form').on('submit', function (event) {
-			event.preventDefault();
-			let userMessage = $('.message-send').val().trim();
-
-			if (userMessage) {
-				// Append user message to chat
-				$('.messages-container').append('<div class="message-box right"><p>' + userMessage + '</p></div>');
-
-				// Save the user message to Local Storage
-				const chatHistory = getChatHistory();
-				chatHistory.push({ type: 'user', text: userMessage });
-				saveChatHistory(chatHistory);
-
-				// Increase the message count and save it
-				let messageCount = getMessageCount() + 1;
-				saveMessageCount(messageCount);
-
-				// Check if the user has sent 11 messages
-				if (messageCount === 11) {
-					saveLastMessageTimestamp(); // Save the timestamp when the 11th message is sent
-				}
-
-				const notification_counter = document.getElementById('notification-counter');
-
-				// Start the GIF
-				let avatar = $('#avatar');
-				if (!chatOpen) {
-					unreadMessages += 1;
-					var sound = document.getElementById('notificationSound');
-					sound.currentTime = 0; // Rewind to the start
-					sound.play(); // Play the sound
-					$('#notification-counter').text(unreadMessages); // Increment unread message count
-					notification_counter.style.display = "inline-block";
-					startBlinkingTabTitle();
-				}
-
-				avatar.attr('src', 'static/images/saitama.gif'); // This restarts the GIF
-
-				// Disable input and button while waiting for the response
-				$('.message-send').val('');
-				$('.svg-button').prop('disabled', true);
-				$('.messages-container').scrollTop($('.messages-container')[0].scrollHeight);
-				$('.svg-button').html(`
-					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-stop">
-						<rect x="6" y="6" width="12" height="12"></rect>
-					</svg>
-				`);
-				let typingIndicator = $('<div class="typing-indicator"><div class="typing-circle"></div><div class="typing-circle"></div><div class="typing-circle"></div><div class="typing-shadow"></div><div class="typing-shadow"></div><div class="typing-shadow"></div></div>');
-				$('.messages-container').append(typingIndicator);
-				$('.messages-container').scrollTop($('.messages-container')[0].scrollHeight);
-
-				$.ajax({
-					type: 'POST',
-					url: '/chat-response/',  // Your Django URL
-					data: JSON.stringify({ message: userMessage, history: getChatHistory(), time_remaining: has24HoursPassed() }),
-					contentType: 'application/json',
-					success: function (response) {
-						// Append the bot's response to chat
-						typingIndicator.remove();
-
-						let botMessage = response.response;  // Get the bot's full response
-						let words = botMessage.split(' ');   // Split the response into words
-						let messageBox = $('<div class="message-box left"><p></p></div>');  // Create message container
-						$('.messages-container').append(messageBox);
-
-						// Show message one word at a time based on word length
-						let i = 0;
-
-						function typeWord() {
-							if (i < words.length) {
-								messageBox.find('p').append(words[i] + ' ');
-								$('.messages-container').scrollTop($('.messages-container')[0].scrollHeight);
-
-								// Calculate delay based on word length
-								let delay = Math.max(200, words[i].length * 10); // Minimum 200ms, adjust delay based on word length
-								i++;
-
-								// Continue typing with dynamic delay
-								setTimeout(typeWord, delay);
-							} else {
-								// Save bot's response to Local Storage
-								const chatHistory = getChatHistory();
-								chatHistory.push({ type: 'bot', text: botMessage });
-								saveChatHistory(chatHistory);
-								$('.svg-button').prop('disabled', false);
-								$('.svg-button').html(`
-									<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-										stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-										class="feather feather-send">
-											<line x1="22" y1="2" x2="11" y2="13"></line>
-											<polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-									</svg>`
-								)
-							}
-						}
-
-						// Start typing the first word
-						typeWord();
-
-					},
-					error: function (xhr, status, error) {
-						alert('An error occurred: ' + error);
-					},
-					complete: function () {
-						if (!chatOpen) {
-							unreadMessages += 1;
-							$('#notification-counter').text(unreadMessages); // Increment unread message count
-							var sound = document.getElementById('notificationSound');
-							sound.currentTime = 0; // Rewind to the start
-							sound.play(); // Play the sound
-							notification_counter.style.display = "inline-block";
-							startBlinkingTabTitle();
-						}
-						// Scroll to the bottom of the chat
-						$('.messages-container').scrollTop($('.messages-container')[0].scrollHeight);
-
-						// Stop the GIF
-						avatar.attr('src', 'static/images/saitama.png'); // This restarts the GIF
+				},
+				complete: function () {
+					if (!chatOpen) {
+						unreadMessages += 1;
+						$('#notification-counter').text(unreadMessages); // Increment unread message count
+						var sound = document.getElementById('notificationSound');
+						sound.currentTime = 0; // Rewind to the start
+						sound.play(); // Play the sound
+						notification_counter.style.display = "inline-block";
+						startBlinkingTabTitle();
 					}
-				});
-			}
-		});
+					// Scroll to the bottom of the chat
+					$('.messages-container').scrollTop($('.messages-container')[0].scrollHeight);
+
+					// Stop the GIF
+					avatar.attr('src', 'static/images/saitama.png'); // This restarts the GIF
+				}
+			});
+		}
+	});
 
 	</script>
 

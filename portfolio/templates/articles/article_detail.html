@@ -1,0 +1,308 @@
+<!-- templates/articles/article_detail.html -->
+{% extends "base.html" %}
+{% block content %}
+<section class="ftco-section">
+  <div class="container">
+    <!-- Back to Articles Button -->
+    <a href="{% url 'article_list' %}" class="btn btn-secondary mb-4">
+      &larr; Back to Articles
+    </a>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12 ftco-animate">
+        <div class="article-header">
+          <h1>{{ article.title }}</h1>
+          <div id="article-like-container">
+            <button id="article-like-btn" class="btn-like">
+              <span class="oi oi-heart" aria-hidden="true"></span>
+            </button>
+            <span id="article-like-text">
+              Loved by <span id="article-like-count">{{ article.likes.count }}</span> people
+            </span>
+          </div>
+        </div>
+        <img src="{{ article.image.url }}" alt="{{ article.title }}" class="img-fluid mb-4">
+        {% if article.github_link %}
+        <div class="github-link">
+          <a href="{{ article.github_link }}" target="_blank" style="font-size: 1rem; text-decoration: none;">
+            <i class="fab fa-github" aria-hidden="true"></i> View on GitHub
+          </a>
+        </div>
+        {% endif %}  
+        <div class="content">
+          {{ html_content|safe }}
+        </div>
+        
+        <!-- YouTube Video Player -->
+        {% if youtube_video_id %}
+        <div class="youtube-video mb-4" style="margin-bottom:20px;">
+          <div style="position: relative; width: 100%; height: 0; padding-bottom: 56.25%;">
+            <iframe src="https://www.youtube.com/embed/{{ youtube_video_id }}"
+                    frameborder="0"
+                    allowfullscreen
+                    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
+            </iframe>
+          </div>
+        </div>
+        {% endif %}
+        
+        <!-- Comment Section -->
+        <hr>
+        <h3>Comments</h3>
+        <div id="comments">
+          {% for comment in comments %}
+            <div class="comment" data-comment-id="{{ comment.id }}" data-owner="{{ comment.client_id }}" style="margin-bottom:20px; border: 1px solid #ccc; padding:10px;">
+              <p>{{ comment.content }}</p>
+              <small>{{ comment.created_at|date:"M d, Y H:i" }}</small>
+              <br>
+              <button class="like-btn" data-comment-id="{{ comment.id }}" style="border:none; background:none; cursor:pointer; color:white;">
+                <span class="oi oi-heart" aria-hidden="true"></span>
+                (<span id="like-count-{{ comment.id }}">{{ comment.likes.count }}</span>)
+              </button>
+              <button class="reply-btn" data-comment-id="{{ comment.id }}">Reply</button>
+              <!-- Delete button; shown via JS if ownership matches -->
+              <button class="delete-btn" data-comment-id="{{ comment.id }}" style="display:none; border:none; background:none; cursor:pointer;">
+                <span class="oi oi-trash" aria-hidden="true"></span>
+              </button>
+
+              <!-- Replies -->
+              {% if comment.replies.all %}
+                <div class="replies" style="margin-left:20px; margin-top:10px;">
+                  {% for reply in comment.replies.all %}
+                    <div class="reply" data-comment-id="{{ reply.id }}" data-owner="{{ reply.client_id }}" style="margin-bottom:10px; border: 1px solid #ddd; padding:5px;">
+                      <p>{{ reply.content }}</p>
+                      <small>{{ reply.created_at|date:"M d, Y H:i" }}</small>
+                      <br>
+                      <button class="like-btn" data-comment-id="{{ reply.id }}" style="border:none; background:none; cursor:pointer;">
+                        <span class="oi oi-heart" aria-hidden="true"></span>
+                        (<span id="like-count-{{ reply.id }}">{{ reply.likes.count }}</span>)
+                      </button>
+                      <button class="delete-btn" data-comment-id="{{ reply.id }}" style="display:none; border:none; background:none; cursor:pointer;">
+                        <span class="oi oi-trash" aria-hidden="true"></span>
+                      </button>
+                    </div>
+                  {% endfor %}
+                </div>
+              {% endif %}
+
+              <!-- Hidden reply form for this comment -->
+              <div class="reply-form" id="reply-form-{{ comment.id }}" style="display:none; margin-top:10px;">
+                <form method="POST" action="{% url 'add_comment' article.pk %}">
+                  {% csrf_token %}
+                  <input name="content" rows="2" placeholder="Write your reply here..." required></input>
+                  <input type="hidden" name="parent_id" value="{{ comment.id }}">
+                  <!-- Hidden client id will be set via JavaScript -->
+                  <input type="hidden" name="client_id" class="client-id-field">
+                  <button type="submit" class="btn btn-sm btn-secondary">Submit Reply</button>
+                </form>
+              </div>
+            </div>
+          {% empty %}
+            <p>No comments yet. Be the first to comment!</p>
+          {% endfor %}
+        </div>
+
+        <!-- Add new comment -->
+        <div class="add-comment">
+          <h3>Add a Comment</h3>
+          <form id="comment-form" method="POST" action="{% url 'add_comment' article.pk %}">
+            {% csrf_token %}
+            {{ comment_form.as_p }}
+            <!-- Hidden field for client id -->
+            <input type="hidden" name="client_id" id="client_id_input">
+            <button type="submit" class="btn btn-primary">Add</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- JavaScript -->
+<script>
+  // Helper to generate a random UUID (v4 simplified)
+  function generateUUID() {
+      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+          var r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+          return v.toString(16);
+      });
+  }
+
+  $(document).ready(function(){
+    // Ensure a unique client id exists in local storage
+    if(!localStorage.getItem('current_client_id')){
+      localStorage.setItem('current_client_id', generateUUID());
+    }
+    var clientId = localStorage.getItem('current_client_id');
+    // Set the hidden client_id fields for comment and reply forms
+    $('#client_id_input, .client-id-field').val(clientId);
+
+    // For each comment/reply, if the owner matches the current client, show the delete button
+    $('.comment, .reply').each(function(){
+      var owner = $(this).data('owner');
+      if(owner && owner === clientId){
+        $(this).find('.delete-btn').show();
+      }
+    });
+
+    // AJAX call to fetch liked comments for this client and update the like buttons accordingly
+    $.ajax({
+      url: "{% url 'get_liked_comments' %}",
+      data: { 'client_id': clientId },
+      method: 'GET',
+      dataType: 'json',
+      success: function(data){
+        // For each liked comment id, add the 'liked' class to the button
+        data.liked_comments.forEach(function(commentId) {
+          $('.like-btn[data-comment-id="' + commentId + '"]').addClass('liked');
+        });
+      },
+      error: function(xhr, status, error){
+          console.error('Error fetching liked comments:', error);
+      }
+    });
+
+
+    // Toggle like on button click using the backend; pass clientId as a GET parameter
+    $('.like-btn').click(function(){
+      var btn = $(this);
+      var commentId = btn.data('comment-id');
+      $.ajax({
+        url: "{% url 'toggle_like_comment' 0 %}".replace('0', commentId),
+        data: { 'client_id': clientId },
+        method: 'GET',
+        dataType: 'json',
+        success: function(data){
+          $('#like-count-' + commentId).text(data.likes);
+          // Update visual state based on returned flag
+          if(data.liked){
+            btn.addClass('liked');
+          } else {
+            btn.removeClass('liked');
+          }
+        },
+        error: function(xhr, status, error){
+          console.error('Error:', error);
+        }
+      });
+    });
+
+    // Handle deletion of a comment/reply
+    $('.delete-btn').click(function(){
+      var btn = $(this);
+      var commentId = btn.data('comment-id');
+      $.ajax({
+        url: "{% url 'delete_comment' 0 %}".replace('0', commentId),
+        method: 'POST',
+        data: {
+          'client_id': clientId,
+          'csrfmiddlewaretoken': "{{ csrf_token }}"
+        },
+        dataType: 'json',
+        success: function(data){
+          if(data.success){
+            // Remove the comment/reply from the DOM
+            btn.closest('.comment, .reply').remove();
+          }
+        },
+        error: function(xhr, status, error){
+          console.error('Error:', error);
+        }
+      });
+    });
+
+    // Toggle the reply form
+    $('.reply-btn').click(function(){
+      var commentId = $(this).data('comment-id');
+      $('#reply-form-' + commentId).toggle();
+    });
+    
+    // --- Article Like Logic ---
+
+    // Fetch current article like status on page load
+    $.ajax({
+      url: "{% url 'get_article_like_status' article.id %}",
+      data: { 'client_id': clientId },
+      method: 'GET',
+      dataType: 'json',
+      success: function(data){
+        $('#article-like-count').text(data.likes);
+        if(data.liked) {
+          $('#article-like-btn').addClass('liked');
+        } else {
+          $('#article-like-btn').removeClass('liked');
+        }
+      },
+      error: function(xhr, status, error){
+        console.error('Error fetching article like status:', error);
+      }
+    });
+
+    // Toggle article like on button click
+    $('#article-like-btn').click(function(){
+      $.ajax({
+        url: "{% url 'toggle_article_like' article.id %}",
+        data: { 'client_id': clientId },
+        method: 'GET',
+        dataType: 'json',
+        success: function(data){
+          $('#article-like-count').text(data.likes);
+          if(data.liked){
+            $('#article-like-btn').addClass('liked');
+          } else {
+            $('#article-like-btn').removeClass('liked');
+          }
+        },
+        error: function(xhr, status, error){
+          console.error('Error toggling article like:', error);
+        }
+      });
+    });
+  });
+  
+</script>
+
+<style>
+  /* Style for liked heart */
+  .liked span.oi-heart {
+    color: red;
+  }
+  .article-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  #article-like-container {
+    display: flex;
+    align-items: center;
+  }
+  #article-like-btn {
+    border: none;
+    background: none;
+    cursor: pointer;
+    margin-right: 8px;
+    font-size: 1.5rem;
+    transition: transform 0.2s;
+    color: white;
+  }
+  #article-like-btn:hover {
+    transform: scale(1.1);
+  }
+  #article-like-btn.liked span.oi-heart {
+    color: red;
+  }
+  #article-like-text {
+    font-size: 1rem;
+    font-weight: 500;
+  }
+
+  .delete-btn {
+    color: white;
+  }
+
+</style>
+{% endblock content %}

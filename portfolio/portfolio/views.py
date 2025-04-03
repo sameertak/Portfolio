@@ -22,8 +22,12 @@ def chat_response(request):
         user_message = data.get('message')
         history = data.get('history')
         time_remaining = data.get('time_remaining')
+        article_id = data.get('currentPage').split('/')
+        if len(article_id) > 2:
+            article_id = article_id[-2]
+        print(article_id)
         # Use the Langchain helper to get a response from the resume PDF
-        response = get_response_from_langchain(user_message, history, time_remaining)
+        response = get_response_from_langchain(user_message, history, time_remaining, article_id)
         return JsonResponse({'response': response})
     return JsonResponse({'error': 'Invalid request method'}, status=400)
 

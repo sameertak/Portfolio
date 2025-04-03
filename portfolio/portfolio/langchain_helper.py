@@ -6,6 +6,8 @@ from langchain.chains import RetrievalQA
 from langchain_openai import ChatOpenAI
 import os
 import environ
+from article.models import Article, ChatQuery
+from django.core.exceptions import ObjectDoesNotExist
 
 env = environ.Env()
 environ.Env.read_env()
@@ -56,9 +58,20 @@ def initialize_langchain():
     return qa_chain
 
 # Function to get a response based on user query
-def get_response_from_langchain(user_message, history, time_remaining):
+def get_response_from_langchain(user_message, history, time_remaining, article_id):
     # Initialize the QA chain only once (or implement a singleton pattern)
-    user_messages = [entry for entry in history if entry['type'] == 'user']
+    user_messages = []
+    if article_id == 'articles':
+        return ( 
+            "You have to select a certain article before chatting"
+        )
+    if article_id.isdigit():
+        article_id = int(article_id)
+    else:
+        article_id = 0
+
+    if history:
+        user_messages = [entry for entry in history if entry['type'] == 'user']
     if len(user_messages) > 10 and not time_remaining:
         # Default reply if too many user queries have been sent
         return (
@@ -76,9 +89,26 @@ def get_response_from_langchain(user_message, history, time_remaining):
         "Do not consider any other information."
     )
 
-    formatted_history = "\n".join(
-        [f"{entry['type'].capitalize()}: {entry['text']}" for entry in history]
-    )
+    # If article_id is non-zero, load the markdown file content
+    if article_id > 0:
+        try:
+            article = Article.objects.get(id=article_id)
+            # Read the markdown file content
+            with article.markdown_file.open() as md_file:
+                markdown_content = md_file.read().decode('utf-8')
+
+            # Update the system prompt with the content of the markdown file
+            system_prompt = (
+                f"Your job is to assist users based on the content of this article. "
+                f"Here is the content of the article:\n{markdown_content}\n"
+                "Answer the user's question based solely on the article content. "
+                "Do not consider any other information."
+            )
+        except ObjectDoesNotExist:
+            return "The specified article was not found."
+        except Exception as e:
+            return f"An error occurred while processing the article: {str(e)}"
+
 
     # Concatenate system prompt with chat history and user message
     # full_query = (
@@ -91,6 +121,8 @@ def get_response_from_langchain(user_message, history, time_remaining):
     # Get the response from the QA chain using invoke
     response = qa_chain.invoke({"query": full_query})
     answer = response.get("result", "No response")  # Default to "No response" if the key doesn't exist
+
+    ChatQuery.objects.create(question=user_message, response=answer)
 
     return answer
 

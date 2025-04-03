@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="ftco-section" id="blog-section">
+  <div class="container">
+    <div class="row justify-content-center pb-5">
+      <div class="col-md-12 heading-section text-center ftco-animate">
+        <h1 class="big big-2">My Blog</h1>
+        <h2 class="mb-4">Latest Articles</h2>
+      </div>
+    </div>
+    <div class="row" id="articles-container">
+      {% include "articles/_article_list.html" with articles=articles %}
+    </div>
+    {% if has_next %}
+    <div class="row">
+      <div class="col text-center">
+        <button id="load-more" class="btn btn-primary">Show More</button>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  // Start with page 2 since page 1 is already loaded
+  $(document).ready(function(){
+    var page = 2;
+    $('#load-more').click(function(){
+      $.ajax({
+        url: window.location.pathname,
+        data: { 'page': page },
+        dataType: 'json',
+        success: function(data) {
+          $('#articles-container').append(data.articles_html);
+          if (data.has_next) {
+            page++;
+          } else {
+            $('#load-more').hide();
+          }
+        }
+      });
+    });
+  });
+</script>
+{% endblock content %}

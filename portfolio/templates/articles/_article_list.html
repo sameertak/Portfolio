@@ -1,0 +1,22 @@
+{% for article in articles %}
+  <div class="col-md-4 ftco-animate fadeInUp ftco-animated">
+    <div class="blog-entry">
+      <a href="{% url 'article_detail' article.pk %}">
+        <div class="project img ftco-animate d-flex justify-content-center align-items-center"
+             style="background-image: url('{{ article.image.url }}');">
+          <div class="overlay"></div>
+          <div class="text text-center p-4" style="padding: 0; max-width: 100%;">
+            <h3>{{ article.title }}</h3>
+          </div>
+        </div>
+      </a>
+      <div class="text d-flex justify-content-between align-items-center">
+        <span>{{ article.title|truncatewords:3 }}</span>
+        <div style="text-align: right; margin-left: 10px;">
+          <span>{{ article.likes.count }}</span>
+          <span class="oi oi-heart" style="color:red;" aria-hidden="true"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endfor %}

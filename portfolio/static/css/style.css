@@ -10048,3 +10048,36 @@ textarea.form-control {
   right: 15%;
   animation-delay: 0.3s;
 }
+
+.liked span.oi-heart {
+  color: red;
+}
+
+pre {
+  color: white;
+}
+
+.image-container {
+  position: relative;
+}
+
+.image-container .overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay */
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  text-align: center;
+}
+
+/* Show overlay on hover */
+.image-container:hover .overlay {
+  opacity: 1;
+}

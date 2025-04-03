@@ -1,0 +1,410 @@
+<!-- templates/base.html -->
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+  <title>Portfolio - Samir Tak</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/open-iconic-bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/animate.css' %}">
+  <link rel="stylesheet" href="{% static 'css/owl.carousel.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/owl.theme.default.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/magnific-popup.css' %}">
+  <link rel="stylesheet" href="{% static 'css/aos.css' %}">
+  <link rel="stylesheet" href="{% static 'css/ionicons.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/flaticon.css' %}">
+  <link rel="stylesheet" href="{% static 'css/icomoon.css' %}">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body data-spy="scroll" data-target=".site-navbar-target" data-offset="300">
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar ftco-navbar-light site-navbar-target" id="ftco-navbar">
+    <div class="container">
+      <a class="navbar-brand" href="#home-section">Samir Tak</a>
+      <button class="navbar-toggler js-fh5co-nav-toggle fh5co-nav-toggle" type="button" data-toggle="collapse"
+              data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="oi oi-menu"></span> Menu
+      </button>
+      <div class="collapse navbar-collapse" id="ftco-nav">
+        <ul class="navbar-nav nav ml-auto">
+          <li class="nav-item"><a href="/#home-section" class="nav-link"><span>Home</span></a></li>
+          <li class="nav-item"><a href="/#about-section" class="nav-link"><span>About</span></a></li>
+          <li class="nav-item"><a href="/#resume-section" class="nav-link"><span>Resume</span></a></li>
+          <li class="nav-item"><a href="/#services-section" class="nav-link"><span>Services</span></a></li>
+          <li class="nav-item"><a href="/#skills-section" class="nav-link"><span>Skills</span></a></li>
+          <!-- Update the blog link to redirect to the articles app -->
+          <li class="nav-item"><a href="{% url 'article_list' %}" class="nav-link"><span>My Blog</span></a></li>
+          <li class="nav-item"><a href="/#contact-section" class="nav-link"><span>Contact</span></a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Content Block: pages will insert their content here -->
+  {% block content %}
+  {% endblock content %}
+
+  <!-- Footer (or any other shared UI elements) -->
+  <footer class="ftco-footer ftco-section">
+    <!-- Footer content here -->
+  </footer>
+
+	<button class="Btn" onclick="toggleChat()">
+		<div class="sign">
+			<svg class="socialSvg chatbotSvg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+				<path
+					d="M12 0C5.37258 0 0 4.76751 0 10.6562C0 13.5597 1.25571 16.1742 3.3084 18.0236L3.30832 22.4459C3.30832 22.786 3.63678 23.0412 4.00355 22.9638L8.45751 21.999C9.6338 22.3846 10.7885 22.5417 12 22.5417C18.6274 22.5417 24 17.7742 24 11.8854C24 5.99664 18.6274 0 12 0ZM7.28571 13.8438C6.37429 13.8438 5.625 13.1474 5.625 12.3125C5.625 11.4776 6.37429 10.7812 7.28571 10.7812C8.19714 10.7812 8.94643 11.4776 8.94643 12.3125C8.94643 13.1474 8.19714 13.8438 7.28571 13.8438ZM12 13.8438C11.0886 13.8438 10.3393 13.1474 10.3393 12.3125C10.3393 11.4776 11.0886 10.7812 12 10.7812C12.9114 10.7812 13.6607 11.4776 13.6607 12.3125C13.6607 13.1474 12.9114 13.8438 12 13.8438ZM16.7143 13.8438C15.8029 13.8438 15.0536 13.1474 15.0536 12.3125C15.0536 11.4776 15.8029 10.7812 16.7143 10.7812C17.6257 10.7812 18.375 11.4776 18.375 12.3125C18.375 13.1474 17.6257 13.8438 16.7143 13.8438Z"
+					fill="white" />
+			</svg>
+		</div>
+		<span class="text">Chat</span>
+		<span id="notification-counter" class="notification-counter">1</span>
+		<audio id="notificationSound" src="{% static 'sound/notification.mp3' %}" preload="auto"></audio>
+	</button>
+
+	<div class="chat-container" id="chatCard">
+		<div class="chat-header">
+			<div class="chat-header-content">
+				<img id="avatar" class="img-avatar" src="{% static 'images/saitama.png' %}" alt="avatar" />
+				<div class="text-chat">Chat</div>
+			</div>
+			<button class="close-button" onclick="toggleChat()">
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+					stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x">
+					<line x1="18" y1="6" x2="6" y2="18"></line>
+					<line x1="6" y1="6" x2="18" y2="18"></line>
+				</svg>
+			</button>
+		</div>
+		<div class="chat-body">
+			<div class="messages-container">
+				<div class="message-box left">
+					<p>
+						Hello! I am Samir. You can ask me about the current article!
+					</p>
+				</div>
+			</div>
+			<div class="message-input">
+				<form style="display: flex; align-items: center; justify-content: space-between;">
+					<input type="text" placeholder="Type your message here" class="message-send" required></input>
+					<button type="submit" class="svg-button">
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+							stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+							class="feather feather-send">
+							<line x1="22" y1="2" x2="11" y2="13"></line>
+							<polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+						</svg>
+					</button>
+				</form>
+			</div>
+		</div>
+	</div>
+  <!-- Scripts -->
+  <script src="{% static 'js/jquery.min.js' %}"></script>
+  <script src="{% static 'js/jquery-migrate-3.0.1.min.js' %}"></script>
+  <script src="{% static 'js/popper.min.js' %}"></script>
+  <script src="{% static 'js/bootstrap.min.js' %}"></script>
+  <script src="{% static 'js/jquery.easing.1.3.js' %}"></script>
+  <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
+  <script src="{% static 'js/jquery.stellar.min.js' %}"></script>
+  <script src="{% static 'js/owl.carousel.min.js' %}"></script>
+  <script src="{% static 'js/jquery.magnific-popup.min.js' %}"></script>
+  <script src="{% static 'js/aos.js' %}"></script>
+  <script src="{% static 'js/jquery.animateNumber.min.js' %}"></script>
+  <script src="{% static 'js/scrollax.min.js' %}"></script>
+  <script src="{% static 'js/main.js' %}"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+	let chatOpen = false;
+let unreadMessages = 1;
+const originalTitle = document.title;  // Save the original tab title
+let blinkInterval;  // Variable to store the interval ID for blinking
+
+function startBlinkingTabTitle() {
+    let showUnread = true;  // Flag to toggle between titles
+    blinkInterval = setInterval(function () {
+        if (unreadMessages > 0) {
+            document.title = showUnread ? `(${unreadMessages}) New messages - ${originalTitle}` : originalTitle;
+            showUnread = !showUnread;  // Toggle between showing unread message count and original title
+        } else {
+            clearInterval(blinkInterval);  // Stop blinking when there are no unread messages
+            document.title = originalTitle;  // Reset to original title
+        }
+    }, 1000);  // Blink every 1 second (1000ms)
+}
+
+function stopBlinkingTabTitle() {
+    clearInterval(blinkInterval);  // Stop the blinking effect
+    document.title = originalTitle;  // Reset to original title
+}
+
+function calculateExperience(startDate) {
+    const currentDate = new Date();
+    const start = new Date(startDate);
+    const totalMonths = (currentDate.getFullYear() - start.getFullYear()) * 12 + (currentDate.getMonth() - start.getMonth());
+    return totalMonths;
+}
+
+function toggleChat() {
+    const chatCard = document.getElementById("chatCard");
+    const notificationCounter = document.getElementById('notification-counter');
+
+    // Toggle visibility of the chat card
+    if (chatCard.style.display === "none" || chatCard.style.display === "") {
+        chatCard.style.display = "flex"; // Show the chat card
+        notificationCounter.textContent = '0'; // Reset counter when chat opens
+        unreadMessages = 0
+        notificationCounter.style.display = "none"
+        stopBlinkingTabTitle();
+    } else {
+        chatCard.style.display = "none"; // Hide the chat card
+        if (unreadMessages > 0) {
+            notificationCounter.textContent = unreadMessages; // Show counter if there are unread messages
+            notificationCounter.style.display = "inline-block"
+        }
+    }
+
+    chatOpen = !chatOpen;
+
+}
+
+// Function to close the chat window
+function closeChat() {
+    const chatContainer = document.getElementById('chatCard');
+    chatContainer.style.display = 'none';
+}
+
+// Event listener for clicks outside the chat
+document.addEventListener('click', function (event) {
+    const chatContainer = document.getElementById('chatCard');
+    const chatButton = document.querySelector('.Btn'); // Assuming this is your button class
+    const isClickInsideChat = chatContainer.contains(event.target);
+    const isClickInsideButton = chatButton.contains(event.target);
+
+    // If the click was outside both the chat and the button, close the chat
+    if (!isClickInsideChat && !isClickInsideButton) {
+        closeChat();
+    }
+});
+
+// Function to get chat history from Local Storage
+function getChatHistory() {
+    return JSON.parse(localStorage.getItem('chatHistory')) || [];
+}
+
+function currentPage() {
+    return window.location.pathname
+}
+
+// Function to save chat history to Local Storage
+function saveChatHistory(messages) {
+    localStorage.setItem('chatHistory', JSON.stringify(messages));
+}
+
+// Function to delete chat history from Local Storage
+function deleteChatHistory() {
+    localStorage.removeItem('chatHistory');
+}
+
+function saveLastMessageTimestamp() {
+    const currentTime = new Date().getTime();
+    localStorage.setItem('lastMessageTimestamp', currentTime);
+}
+
+// Function to get the message count from Local Storage
+function getMessageCount() {
+    const chatHistory = getChatHistory(); // Retrieve chat history from local storage
+    let userMessageCount = 0; // Initialize a counter for user messages
+
+    // Loop through the chat history and count user messages
+    chatHistory.forEach(message => {
+        if (message.type === 'user') {
+            userMessageCount++;
+        }
+    });
+
+    return userMessageCount; // Return the count of user messages
+}
+
+// Function to save the message count to Local Storage
+function saveMessageCount(count) {
+    localStorage.setItem('messageCount', count);
+}
+
+// Function to reset message count from Local Storage
+function resetMessageCount() {
+    localStorage.removeItem('messageCount');
+}
+
+// Function to save the last message timestamp
+function saveLastMessageTimestamp() {
+    localStorage.setItem('lastMessageTimestamp', new Date().getTime());
+}
+
+// Function to get the last message timestamp
+function getLastMessageTimestamp() {
+    return parseInt(localStorage.getItem('lastMessageTimestamp')) || 0;
+}
+
+// Function to check if 24 hours have passed since the last message was sent
+function has24HoursPassed() {
+    const lastTimestamp = getLastMessageTimestamp();
+    const currentTime = new Date().getTime();
+    const hours24 = 24 * 60 * 60 * 1000;
+    return (currentTime - lastTimestamp) >= hours24;
+}
+
+function displayChatMessages() {
+    const messages = getChatHistory();
+    const messagesContainer = $('.messages-container');
+    messagesContainer.empty(); // Clear existing messages
+
+    messages.forEach(({ type, text }) => {
+        const messageBox = $('<div class="message-box ' + (type === 'user' ? 'right' : 'left') + '"><p></p></div>');
+        messageBox.find('p').text(text);
+        messagesContainer.append(messageBox);
+    });
+    messagesContainer.scrollTop(messagesContainer[0].scrollHeight);
+}
+
+// Display chat messages on page load
+$(document).ready(function () {
+    displayChatMessages();
+    if (has24HoursPassed()) {
+        deleteChatHistory()
+        resetMessageCount()
+    }
+});
+
+
+// Form submission handling
+$('#chatCard form').on('submit', function (event) {
+    event.preventDefault();
+    let userMessage = $('.message-send').val().trim();
+    if (userMessage) {
+        // Append user message to chat
+        $('.messages-container').append('<div class="message-box right"><p>' + userMessage + '</p></div>');
+
+        // Save the user message to Local Storage
+        const chatHistory = getChatHistory();
+        chatHistory.push({ type: 'user', text: userMessage });
+        saveChatHistory(chatHistory);
+
+        // Increase the message count and save it
+        let messageCount = getMessageCount() + 1;
+        saveMessageCount(messageCount);
+
+        // Check if the user has sent 11 messages
+        if (messageCount === 11) {
+            saveLastMessageTimestamp(); // Save the timestamp when the 11th message is sent
+        }
+
+        const notification_counter = document.getElementById('notification-counter');
+
+        // Start the GIF
+        let avatar = $('#avatar');
+        if (!chatOpen) {
+            unreadMessages += 1;
+            var sound = document.getElementById('notificationSound');
+            sound.currentTime = 0; // Rewind to the start
+            sound.play(); // Play the sound
+            $('#notification-counter').text(unreadMessages); // Increment unread message count
+            notification_counter.style.display = "inline-block";
+            startBlinkingTabTitle();
+        }
+
+        avatar.attr('src', "{% static 'images/saitama.gif' %}"); // This restarts the GIF
+
+        // Disable input and button while waiting for the response
+        $('.message-send').val('');
+        $('.svg-button').prop('disabled', true);
+        $('.messages-container').scrollTop($('.messages-container')[0].scrollHeight);
+        $('.svg-button').html(`
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-stop">
+                <rect x="6" y="6" width="12" height="12"></rect>
+            </svg>
+        `);
+        let typingIndicator = $('<div class="typing-indicator"><div class="typing-circle"></div><div class="typing-circle"></div><div class="typing-circle"></div><div class="typing-shadow"></div><div class="typing-shadow"></div><div class="typing-shadow"></div></div>');
+        $('.messages-container').append(typingIndicator);
+        $('.messages-container').scrollTop($('.messages-container')[0].scrollHeight);
+
+        $.ajax({
+            type: 'POST',
+            url: '/chat-response/',
+            data: JSON.stringify({ message: userMessage, history: getChatHistory(), time_remaining: has24HoursPassed(), currentPage: currentPage() }),
+            contentType: 'application/json',
+            success: function (response) {
+                // Append the bot's response to chat
+                typingIndicator.remove();
+
+                let botMessage = response.response;  // Get the bot's full response
+                let words = botMessage.split(' ');   // Split the response into words
+                let messageBox = $('<div class="message-box left"><p></p></div>');  // Create message container
+                $('.messages-container').append(messageBox);
+
+                // Show message one word at a time based on word length
+                let i = 0;
+
+                function typeWord() {
+                    if (i < words.length) {
+                        messageBox.find('p').append(words[i] + ' ');
+                        $('.messages-container').scrollTop($('.messages-container')[0].scrollHeight);
+
+                        // Calculate delay based on word length
+                        let delay = Math.max(200, words[i].length * 10); // Minimum 200ms, adjust delay based on word length
+                        i++;
+
+                        // Continue typing with dynamic delay
+                        setTimeout(typeWord, delay);
+                    } else {
+                        // Save bot's response to Local Storage
+                        const chatHistory = getChatHistory();
+                        chatHistory.push({ type: 'bot', text: botMessage });
+                        saveChatHistory(chatHistory);
+                        $('.svg-button').prop('disabled', false);
+                        $('.svg-button').html(`
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                class="feather feather-send">
+                                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                            </svg>`
+                        )
+                    }
+                }
+
+                // Start typing the first word
+                typeWord();
+
+            },
+            error: function (xhr, status, error) {
+                alert('An error occurred: ' + error);
+            },
+            complete: function () {
+                if (!chatOpen) {
+                    unreadMessages += 1;
+                    $('#notification-counter').text(unreadMessages); // Increment unread message count
+                    var sound = document.getElementById('notificationSound');
+                    sound.currentTime = 0; // Rewind to the start
+                    sound.play(); // Play the sound
+                    notification_counter.style.display = "inline-block";
+                    startBlinkingTabTitle();
+                }
+                // Scroll to the bottom of the chat
+                $('.messages-container').scrollTop($('.messages-container')[0].scrollHeight);
+
+                // Stop the GIF
+                avatar.attr('src', "{% static 'images/saitama.png' %}"); // This restarts the GIF
+            }
+        });
+    }
+});
+
+  </script>
+
+
+</body>
+</html>
